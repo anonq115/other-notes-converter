@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Programming Language Converter</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #eee;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .code-container {
+            width: 700px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .keyword {
+            color: #f92672;
+            font-weight: bold;
+        }
+
+        .string {
+            color: #e6db74;
+        }
+
+        .comment {
+            color: #75715e;
+            font-style: italic;
+        }
+
+        .repeated {
+            background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            color: #fff;
+            padding: 2px;
+            border-radius: 3px;
+        }
+
+        .valuable {
+            background-image: linear-gradient(to right, #132c4b, #183e63, #1d4f79, #22618f, #2773a5, #2c85bb, #3297d2, #37a9e8);
+            color: #fff;
+            padding: 2px;
+            border-radius: 3px;
+        }
+
+        .sentence {
+            margin-left: 20px;
+        }
+
+        .summary {
+            margin-top: 40px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text to Programming Language Converter</h1>
+    <form>
+        <label for="textInput">Enter your text:</label>
+        <br>
+        <input type="text" id="textInput">
+        <br><br>
+        <button type="button" onclick="convertText()">Convert</button>
+    </form>
+    <br>
+    <div class="code-container" id="convertedText"></div>
+
+    <div class="summary" id="summary"></div>
+
+    <script>
+        function convertText() {
+            var inputText = document.getElementById("textInput").value;
+            var convertedText = textToCode(inputText);
+            document.getElementById("convertedText").innerHTML = convertedText;
+
+            var summary = generateSummary(inputText);
+            document.getElementById("summary").innerHTML = summary;
+        }
+
+        function textToCode(text) {
+            var sentences = text.split(". ");
+            var converted = "";
+            for (var i = 0; i < sentences.length; i++) {
+                var sentence = sentences[i];
+                if (sentence.trim() !== "") {
+                    converted += "<div class='sentence'>" + formatSentence(sentence) + "</div>";
+                }
+            }
+            return converted;
+        }
+
+        function formatSentence(sentence) {
+            var words = sentence.split(" ");
+            var formatted = "";
+            var isFirstWord = true;
+            var valuableWords = {};
+
+            for (var i = 0; i < words.length; i++) {
+                var word = words[i];
+                if (isFirstWord) {
+                    formatted += "<span class='keyword'>" + word + "</span> ";
+                    isFirstWord = false;
+                } else {
+                    var formattedWord = word;
+                    if (valuableWords[word]) {
+                        formattedWord = "<span class='valuable'>" + word + "</span>";
+                    }
+                    formatted += formattedWord + " ";
+                    valuableWords[word] = true;
+                }
+            }
+            return "{" + formatted.trim() + "}";
+        }
+
+        function generateSummary(inputText) {
+            var words = inputText.split(" ");
+            var summary = "";
+            var fib = fibonacci(words.length + 1);
+
+            for (var i = 0; i < fib.length; i++) {
+                if (i !== 0) {
+                    summary += " ";
+                }
+
+                var index = fib[i] - 1;
+                if (index < words.length) {
+                    summary += words[index];
+                }
+            }
+            return summary;
+        }
+
+        function fibonacci(n) {
+            var fib = [0, 1];
+            for (var i = 2; i <= n; i++) {
+                fib[i] = fib[i - 1] + fib[i - 2];
+            }
+            return fib;
+        }
+    </script>
+</body>
+</html>
